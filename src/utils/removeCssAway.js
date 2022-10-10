@@ -8,17 +8,9 @@
  * @return {Array<{ id: number, score: number }>}
  */
 function removeCssAway(css, ids) {
-  const cssClone = [...css];
-
-  ids.forEach((id) => {
-    const csIndex = cssClone.findIndex((cs) => cs.id === id);
-
-    if (csIndex >= 0) {
-      cssClone.splice(csIndex, 1);
-    }
+  return css.filter((cs) => {
+    return !ids.includes(cs.id);
   });
-
-  return cssClone;
 }
 
 module.exports = removeCssAway;

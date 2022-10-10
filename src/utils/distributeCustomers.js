@@ -2,7 +2,7 @@ const sortCssByCustomers = require('./sortCssByCustomers');
 const sortCssByScore = require('./sortCssByScore');
 
 /**
- * Distributes customers to CS's according to each score.
+ * Returns a list of CS's that are responsible for 1 or more customers.
  *
  * @param {Array<{ id: number, score: number }>} css
  * @param {Array<{ id: number, score: number }>} customers
@@ -13,24 +13,25 @@ const sortCssByScore = require('./sortCssByScore');
  */
 function distributeCustomers(css, customers) {
   const sortedCss = sortCssByScore(css);
-  const cssMapById = new Map();
-
-  css.forEach(({ id, score }) => {
-    cssMapById.set(id, {
-      id,
-      score,
-      customers: [],
-    });
-  });
+  const cssMapById = {};
 
   customers.forEach((customer) => {
-    const csId = sortedCss.find((cs) => cs.score >= customer.score)?.id;
-    const csRef = cssMapById.get(csId);
+    const cs = sortedCss.find((cs) => cs.score >= customer.score);
 
-    csRef && csRef.customers.push(customer);
+    if (!cs) {
+      return;
+    }
+
+    const csRef = cssMapById[cs.id];
+
+    if (csRef) {
+      csRef.customers.push(customer)
+    } else {
+      cssMapById[cs.id] = { ...cs, customers: [customer] };
+    }
   });
 
-  return sortCssByCustomers([...cssMapById.values()]);
+  return sortCssByCustomers(Object.values(cssMapById));
 }
 
 module.exports = distributeCustomers;

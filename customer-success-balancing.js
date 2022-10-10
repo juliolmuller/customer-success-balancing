@@ -24,7 +24,7 @@ function customerSuccessBalancing(
   const [busiestCs1, busiestCs2] = cssWithCustomers;
 
   // In case of draw, return "0" instead of an specific ID
-  if (busiestCs1.customers.length === busiestCs2.customers.length) {
+  if (busiestCs1?.customers?.length === busiestCs2?.customers?.length) {
     return 0;
   }
 

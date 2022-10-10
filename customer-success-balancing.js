@@ -1,19 +1,34 @@
+const { areCssValid } = require('./src/validations/cssValidator');
+const { areCustomersValid } = require('./src/validations/customersValidator');
+const distributeCustomers = require('./src/utils/distributeCustomers');
+const removeCssAway = require('./src/utils/removeCssAway');
+
 /**
  * Returns the id of the CustomerSuccess with the most customers
- * @param {array} customerSuccess
- * @param {array} customers
- * @param {array} customerSuccessAway
+ * @param {Array<{ id: number, score: number }>} customerSuccess
+ * @param {Array<{ id: number, score: number }>} customers
+ * @param {number[]} customerSuccessAway
+ *
+ * @throws {ValidationError}
  */
 function customerSuccessBalancing(
   customerSuccess,
   customers,
   customerSuccessAway
 ) {
-  /**
-   * ===============================================
-   * =========== Write your solution here ==========
-   * ===============================================
-   */
+  areCssValid(customerSuccess, customerSuccessAway.length);
+  areCustomersValid(customers);
+
+  const availableCss = removeCssAway(customerSuccess, customerSuccessAway);
+  const cssWithCustomers = distributeCustomers(availableCss, customers);
+  const [busiestCs1, busiestCs2] = cssWithCustomers;
+
+  // In case of draw, return "0" instead of an specific ID
+  if (busiestCs1.customers.length === busiestCs2.customers.length) {
+    return 0;
+  }
+
+  return busiestCs1.id;
 }
 
 test("Scenario 1", () => {

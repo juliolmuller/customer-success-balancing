@@ -2,17 +2,17 @@
 /**
  * Orders CS's ascending by their score.
  *
- * @param {Array<{ id: number, score: number }>} css
+ * @param {Array<object extends { score: number }>} item
  *
- * @return {Array<{ id: number, score: number }>}
+ * @return {Array<object extends { score: number }>}
  */
-function sortCssByScore(css) {
-  return [...css].sort((cs1, cs2) => {
+function sortByScore(item) {
+  return [...item].sort((cs1, cs2) => {
     return cs1.score - cs2.score;
   });
 }
 
-module.exports = sortCssByScore;
+module.exports = sortByScore;
 
 test('Orders array correctly', () => {
   const css = [
@@ -21,7 +21,7 @@ test('Orders array correctly', () => {
     { id: 3, score: 80 },
     { id: 4, score: 10 },
   ];
-  const newCss = sortCssByScore(css);
+  const newCss = sortByScore(css);
 
   expect(newCss).toEqual([
     { id: 4, score: 10 },
